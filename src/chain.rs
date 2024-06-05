@@ -384,6 +384,30 @@ impl Chain {
         Self::from_named(NamedChain::Dev)
     }
 
+    /// Returns the bsc mainnet chain.
+    #[inline]
+    pub const fn bsc_mainnet() -> Self {
+        Self::from_named(NamedChain::BNBSmartChain)
+    }
+
+    /// Returns the bsc testnet chain.
+    #[inline]
+    pub const fn bsc_testnet() -> Self {
+        Self::from_named(NamedChain::BNBSmartChainTestnet)
+    }
+
+    /// Returns the opbnb mainnet chain.
+    #[inline]
+    pub const fn opbnb_mainnet() -> Self {
+        Self::from_named(NamedChain::OpBNBMainnet)
+    }
+
+    /// Returns the opbnb testnet chain.
+    #[inline]
+    pub const fn opbnb_testnet() -> Self {
+        Self::from_named(NamedChain::OpBNBTestnet)
+    }
+
     /// Returns the kind of this chain.
     #[inline]
     pub const fn kind(&self) -> &ChainKind {
@@ -419,6 +443,8 @@ impl Chain {
                     | NamedChain::ZoraGoerli
                     | NamedChain::ZoraSepolia
                     | NamedChain::BlastSepolia
+                    | NamedChain::OpBNBMainnet
+                    | NamedChain::OpBNBTestnet
             )
         )
     }

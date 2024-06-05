@@ -73,15 +73,15 @@ pub enum NamedChain {
 
     Rsk = 30,
 
-    #[strum(to_string = "bsc", serialize = "binance-smart-chain")]
-    #[cfg_attr(feature = "serde", serde(alias = "bsc", alias = "binance-smart-chain"))]
-    BinanceSmartChain = 56,
-    #[strum(to_string = "bsc-testnet", serialize = "binance-smart-chain-testnet")]
+    #[strum(to_string = "bsc", serialize = "bnb-smart-chain")]
+    #[cfg_attr(feature = "serde", serde(alias = "bsc", alias = "bnb-smart-chain"))]
+    BNBSmartChain = 56,
+    #[strum(to_string = "bsc-testnet", serialize = "bnb-smart-chain-testnet")]
     #[cfg_attr(
         feature = "serde",
-        serde(alias = "bsc_testnet", alias = "bsc-testnet", alias = "binance-smart-chain-testnet")
+        serde(alias = "bsc_testnet", alias = "bsc-testnet", alias = "bnb-smart-chain-testnet")
     )]
-    BinanceSmartChainTestnet = 97,
+    BNBSmartChainTestnet = 97,
 
     Poa = 99,
     Sokol = 77,
@@ -235,6 +235,11 @@ pub enum NamedChain {
     EtherlinkTestnet = 128123,
 
     Degen = 666666666,
+
+    #[cfg_attr(feature = "serde", serde(alias = "opbnb-mainnet"))]
+    OpBNBMainnet = 204,
+    #[cfg_attr(feature = "serde", serde(alias = "opbnb-testnet"))]
+    OpBNBTestnet = 5611,
 }
 
 // This must be implemented manually so we avoid a conflict with `TryFromPrimitive` where it treats
@@ -377,7 +382,7 @@ impl NamedChain {
             | C::ArbitrumSepolia
             | C::Syndr
             | C::SyndrSepolia
-            | C::ArbitrumNova => 1_300,
+            | C::ArbitrumNova => 260,
 
             C::Optimism
             | C::OptimismGoerli
@@ -403,7 +408,7 @@ impl NamedChain {
 
             C::Moonbeam | C::Moonriver => 12_500,
 
-            C::BinanceSmartChain | C::BinanceSmartChainTestnet => 3_000,
+            C::BNBSmartChain | C::BNBSmartChainTestnet => 3_000,
 
             C::Avalanche | C::AvalancheFuji => 2_000,
 
@@ -460,6 +465,9 @@ impl NamedChain {
             | C::Mantle
             | C::MantleTestnet
             | C::KakarotSepolia => return None,
+
+            C::OpBNBMainnet
+            | C::OpBNBTestnet => 1_000,
         }))
     }
 
@@ -481,8 +489,8 @@ impl NamedChain {
             C::OptimismKovan
             | C::Fantom
             | C::FantomTestnet
-            | C::BinanceSmartChain
-            | C::BinanceSmartChainTestnet
+            | C::BNBSmartChain
+            | C::BNBSmartChainTestnet
             | C::ArbitrumTestnet
             | C::Rsk
             | C::Oasis
@@ -545,7 +553,9 @@ impl NamedChain {
             | C::PgnSepolia
             | C::KakarotSepolia
             | C::EtherlinkTestnet
-            | C::Degen => false,
+            | C::Degen
+            | C::OpBNBMainnet
+            | C::OpBNBTestnet => false,
 
             // Unknown / not applicable, default to false for backwards compatibility.
             C::Dev
@@ -606,7 +616,9 @@ impl NamedChain {
             | C::SyndrSepolia
             | C::EtherlinkTestnet
             | C::Scroll
-            | C::ScrollSepolia => true,
+            | C::ScrollSepolia
+            | C::OpBNBMainnet
+            | C::OpBNBTestnet => true,
             _ => false,
         }
     }
@@ -641,7 +653,7 @@ impl NamedChain {
             | C::BaseGoerli
             | C::BaseSepolia
             | C::BlastSepolia
-            | C::BinanceSmartChainTestnet
+            | C::BNBSmartChainTestnet
             | C::CantoTestnet
             | C::CronosTestnet
             | C::CeloAlfajores
@@ -667,7 +679,8 @@ impl NamedChain {
             | C::ModeSepolia
             | C::PgnSepolia
             | C::KakarotSepolia
-            | C::EtherlinkTestnet => true,
+            | C::EtherlinkTestnet
+            | C::OpBNBTestnet => true,
 
             // Dev chains.
             C::Dev | C::AnvilHardhat => true,
@@ -681,7 +694,7 @@ impl NamedChain {
             | C::Syndr
             | C::Cronos
             | C::Rsk
-            | C::BinanceSmartChain
+            | C::BNBSmartChain
             | C::Poa
             | C::Sokol
             | C::Scroll
@@ -713,7 +726,8 @@ impl NamedChain {
             | C::Mode
             | C::Viction
             | C::Elastos
-            | C::Degen => false,
+            | C::Degen
+            | C::OpBNBMainnet => false,
         }
     }
 
@@ -733,7 +747,10 @@ impl NamedChain {
             | C::Scroll
             | C::ScrollSepolia => "ETH",
 
-            C::BinanceSmartChain | C::BinanceSmartChainTestnet => "BNB",
+            C::BNBSmartChain
+            | C::BNBSmartChainTestnet
+            | C::OpBNBMainnet
+            | C::OpBNBTestnet => "BNB",
 
             C::EtherlinkTestnet => "XTZ",
 
@@ -780,10 +797,9 @@ impl NamedChain {
             C::PolygonMumbai => {
                 ("https://api-testnet.polygonscan.com/api", "https://mumbai.polygonscan.com")
             }
-            C::PolygonAmoy => (
-                "https://www.oklink.com/api/v5/explorer/AMOY_TESTNET/api",
-                "https://www.oklink.com/amoy",
-            ),
+            C::PolygonAmoy => {
+                ("https://api-amoy.polygonscan.com/api", "https://amoy.polygonscan.com")
+            }
 
             C::PolygonZkEvm => {
                 ("https://api-zkevm.polygonscan.com/api", "https://zkevm.polygonscan.com")
@@ -819,9 +835,14 @@ impl NamedChain {
                 ("https://api-testnet.ftmscan.com/api", "https://testnet.ftmscan.com")
             }
 
-            C::BinanceSmartChain => ("https://api.bscscan.com/api", "https://bscscan.com"),
-            C::BinanceSmartChainTestnet => {
+            C::BNBSmartChain => ("https://api.bscscan.com/api", "https://bscscan.com"),
+            C::BNBSmartChainTestnet => {
                 ("https://api-testnet.bscscan.com/api", "https://testnet.bscscan.com")
+            }
+
+            C::OpBNBMainnet => ("https://opbnb.bscscan.com/api", "https://opbnb.bscscan.com/"),
+            C::OpBNBTestnet => {
+                ("https://opbnb-testnet.bscscan.com/api", "https://opbnb-testnet.bscscan.com/")
             }
 
             C::Arbitrum => ("https://api.arbiscan.io/api", "https://arbiscan.io"),
@@ -1017,8 +1038,10 @@ impl NamedChain {
             | C::OptimismGoerli
             | C::OptimismKovan
             | C::OptimismSepolia
-            | C::BinanceSmartChain
-            | C::BinanceSmartChainTestnet
+            | C::BNBSmartChain
+            | C::BNBSmartChainTestnet
+            | C::OpBNBMainnet
+            | C::OpBNBTestnet
             | C::Arbitrum
             | C::ArbitrumTestnet
             | C::ArbitrumGoerli
@@ -1191,8 +1214,8 @@ mod tests {
         // kebab-case
         const ALIASES: &[(NamedChain, &[&str])] = &[
             (Mainnet, &["ethlive"]),
-            (BinanceSmartChain, &["bsc", "binance-smart-chain"]),
-            (BinanceSmartChainTestnet, &["bsc-testnet", "binance-smart-chain-testnet"]),
+            (BNBSmartChain, &["bsc", "bnb-smart-chain"]),
+            (BNBSmartChainTestnet, &["bsc-testnet", "bnb-smart-chain-chapel"]),
             (Gnosis, &["gnosis", "gnosis-chain"]),
             (PolygonMumbai, &["mumbai"]),
             (PolygonZkEvm, &["zkevm", "polygon-zkevm"]),
