@@ -12,7 +12,7 @@ homepage = "https://github.com/alloy-rs/chains"
 repository = "https://github.com/alloy-rs/chains"
 
 [dependencies]
-num_enum = { version = "0.7", default-features = false }
+num_enum = { version = "0.7", default-features = true }
 strum = { version = "0.26", default-features = false, features = ["derive"] }
 
 # serde
